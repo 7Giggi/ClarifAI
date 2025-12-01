@@ -28,7 +28,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.descContinua.descrizioneContinuaActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".ui.lettura.letturaActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".ui.ostacoli.ostacoliActivity"
+            android:exported="true"/>
 
     </application>
 
 </manifest>
+
