@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    tools:context=".ui.main.MainActivity">
+
+    <!-- SUPERIORE - DESCRIZIONE (1/3) -->
+    <LinearLayout
+        android:id="@+id/btn_mode1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#4CAF50"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="PARTE SUPERIORE - Descrizione Continua">
+
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription=""
+            android:src="@drawable/eye"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontSize="32sp"
+            android:text="DESCRIZIONE"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- CENTRALE - LETTURA (1/3) -->
+    <LinearLayout
+        android:id="@+id/btn_mode2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#2196F3"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="PARTE CENTRALE - Lettura Testi">
+
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription=""
+            android:src="@drawable/book_open_blank_variant_outline"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontSize="32sp"
+            android:text="LETTURA"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- INFERIORE - OSTACOLI (1/3) -->
+    <LinearLayout
+        android:id="@+id/btn_mode3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#F44336"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="PARTE INFERIORE - Rilevamento Ostacoli">
+
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription=""
+            android:src="@drawable/alert_octagon"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontSize="32sp"
+            android:text="OSTACOLI"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>
