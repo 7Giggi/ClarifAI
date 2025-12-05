@@ -1,5 +1,8 @@
 // build.gradle.kts (Module: app)
 
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,6 +21,21 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // CONFIGURAZIONE API KEY GEMINI
+        val localPropertiesFile = rootProject.file("local.properties")
+        val properties = Properties()
+
+        if (localPropertiesFile.exists()) {
+            properties.load(FileInputStream(localPropertiesFile))
+        }
+
+        val geminiApiKey = properties.getProperty("gemini.api.key", "")
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+
+        buildFeatures{
+            buildConfig=true
+        }
     }
 
     buildTypes {
@@ -53,7 +71,7 @@ android {
     // ViewBinding per semplificare la UI
     buildFeatures {
         viewBinding = true
-        // mlModelBinding = false // puoi lasciarlo disattivato
+        buildConfig = true
     }
 }
 
@@ -66,36 +84,32 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     // --- CameraX (preview + image analysis) ---
-    val cameraXVersion = "1.5.1" // ultima stabile 1.4.x [web:44][web:130]
+    val cameraXVersion = "1.3.1"
     implementation("androidx.camera:camera-core:$cameraXVersion")
     implementation("androidx.camera:camera-camera2:$cameraXVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraXVersion")
-    implementation("androidx.camera:camera-view:1.5.1")
+    implementation("androidx.camera:camera-view:$cameraXVersion")
 
-    // --- ML Kit Vision: Object Detection + Text Recognition v2 ---
-    // Rilevamento oggetti [web:6][web:32]
-    implementation("com.google.mlkit:object-detection:17.0.2")
 
-    // Text Recognition v2 (Latin script) [web:97][web:139][web:136]
+
+    // Gemini
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+
+    // Text Recognition v2 (Latin script)
     implementation("com.google.mlkit:text-recognition:16.0.1")
 
-    // implementation("com.google.mlkit:text-recognition-chinese:16.0.1")
-    // implementation("com.google.mlkit:text-recognition-japanese:16.0.1")
-
-
     // --- TensorFlow Lite per MiDaS (depth) ---
-    implementation("org.tensorflow:tensorflow-lite:2.17.0")
-    implementation("org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1")
-    // opzionale: delegato GPU se vuoi
-    // implementation("org.tensorflow:tensorflow-lite-gpu:2.14.0")
+    implementation("org.tensorflow:tensorflow-lite:2.14.0")
+    implementation("org.tensorflow:tensorflow-lite-gpu:2.14.0")
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
 
-    // --- Coroutines (per lavorare bene con thread e ML) ---
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+    // --- Coroutines ---
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
-    // --- Network (per traduzione cloud, se la userai) ---
-    implementation("com.squareup.retrofit2:retrofit:3.0.0")
-    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:5.3.2")
+    // --- Network (per traduzione cloud opzionale) ---
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     // --- Test ---
     testImplementation(libs.junit)
