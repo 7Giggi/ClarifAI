@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import luigi.tirocinio.clarifai.databinding.ActivityMainBinding
 import luigi.tirocinio.clarifai.ui.lettura.letturaActivity
 import luigi.tirocinio.clarifai.ui.ostacoli.ostacoliActivity
-import luigi.tirocinio.clarifai.ui.descContinua.descrizioneContinuaActivity
+import luigi.tirocinio.clarifai.ui.descContinua.DescrizioneContinuaActivity
 import kotlin.jvm.java
 
 
@@ -19,19 +19,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Click modalità 1 - Descrizione Continua
+        // Modalità descrizione continua
         binding.btnMode1.setOnClickListener {
-            val intent = Intent(this, descrizioneContinuaActivity::class.java)
+            val intent = Intent(this, DescrizioneContinuaActivity::class.java)
             startActivity(intent)
         }
 
-        // Click modalità 2 - Lettura Testi
+        // Modalità lettura (ancora da implementare)
         binding.btnMode2.setOnClickListener {
             val intent = Intent(this, letturaActivity::class.java)
             startActivity(intent)
         }
 
-        // Click modalità 3 - Rilevamento Ostacoli
+        // Modalità ostacoli (ancora da implementare)
         binding.btnMode3.setOnClickListener {
             val intent = Intent(this, ostacoliActivity::class.java)
             startActivity(intent)
