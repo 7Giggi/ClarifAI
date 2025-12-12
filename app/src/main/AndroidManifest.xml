@@ -48,7 +48,7 @@
 
         <!-- Modalità 2: Lettura Testo -->
         <activity
-            android:name=".ui.lettura.letturaActivity"
+            android:name=".ui.lettura.LetturaActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 

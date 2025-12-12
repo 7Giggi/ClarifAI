@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import luigi.tirocinio.clarifai.databinding.ActivityMainBinding
-import luigi.tirocinio.clarifai.ui.lettura.letturaActivity
+import luigi.tirocinio.clarifai.ui.lettura.LetturaActivity
 import luigi.tirocinio.clarifai.ui.ostacoli.ostacoliActivity
 import luigi.tirocinio.clarifai.ui.descContinua.DescrizioneContinuaActivity
 import kotlin.jvm.java
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         // Modalità lettura (ancora da implementare)
         binding.btnMode2.setOnClickListener {
-            val intent = Intent(this, letturaActivity::class.java)
+            val intent = Intent(this, LetturaActivity::class.java)
             startActivity(intent)
         }
 

@@ -37,6 +37,8 @@ object Constants {
 
     // costanti mod2 (non ancora implementate)
     const val TEXT_MIN_CONFIDENCE = 0.7f // Confidence minima per considerare testo valido
+    const val TEXT_VERTICAL_GROUPING_PX = 50   // Aumenta per raggruppare righe più distanti
+    const val TEXT_HORIZONTAL_GAP_PX = 100     // Aumenta per unire parole più distanti
     const val TEXT_MIN_HEIGHT_PX = 20 // Altezza minima blocco testo in pixel
     const val TRANSLATION_CACHE_SIZE = 50 // Numero traduzioni da mantenere in cache
 

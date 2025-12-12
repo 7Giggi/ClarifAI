@@ -1,39 +1,36 @@
-package luigi.tirocinio.clarifai.ui.descContinua
+package luigi.tirocinio.clarifai.ui.lettura
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.view.PreviewView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import luigi.tirocinio.clarifai.R
 import luigi.tirocinio.clarifai.ml.manager.CameraManager
 import luigi.tirocinio.clarifai.ml.manager.SpeechRecognizerManager
-import luigi.tirocinio.clarifai.utils.Constants
 import luigi.tirocinio.clarifai.utils.PermissionHelper
-import luigi.tirocinio.clarifai.BuildConfig
 
-class DescrizioneContinuaActivity : AppCompatActivity() {
+class LetturaActivity : AppCompatActivity() {
 
-    private val viewModel: DescrizioneContinuaViewModel by viewModels()
+    private val viewModel: LetturaViewModel by viewModels()
 
     private lateinit var cameraManager: CameraManager
     private lateinit var speechManager: SpeechRecognizerManager
 
     private lateinit var previewView: PreviewView
     private lateinit var loadingIndicator: ProgressBar
-    private lateinit var descriptionText: TextView
-    private lateinit var topTouchArea: View
+    private lateinit var textBlocksRecycler: RecyclerView
+
+    //Flag per evitare che ci possano essere più analisi nello stesso momento
+    private var isAnalyzing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_descrizionecontinua)
-
-        // Inizializzazione della API key
-        Constants.initApiKey(BuildConfig.GEMINI_API_KEY)
+        setContentView(R.layout.activity_lettura)
 
         initViews()
         checkPermissionsAndStart()
@@ -43,10 +40,10 @@ class DescrizioneContinuaActivity : AppCompatActivity() {
     private fun initViews() {
         previewView = findViewById(R.id.previewView)
         loadingIndicator = findViewById(R.id.loadingIndicator)
-        //Per ora descriptionText è una view che permette di visualizzare la risposta, potrei eliminarla in futuro
-        descriptionText = findViewById(R.id.descriptionText)
+        textBlocksRecycler = findViewById(R.id.textBlocksRecycler)
 
-        // Touch su qualsiasi parte dello schermo
+        textBlocksRecycler.layoutManager = LinearLayoutManager(this)
+
         previewView.setOnClickListener {
             captureAndAnalyze()
         }
@@ -54,7 +51,7 @@ class DescrizioneContinuaActivity : AppCompatActivity() {
         observeViewModel()
     }
 
-    // Funzione per controllare i permessi e avviare la fotocamera
+    //Funzione per controllare i permessi e avviare la fotocamera
     private fun checkPermissionsAndStart() {
         if (!PermissionHelper.hasCameraPermissions(this)) {
             PermissionHelper.requestPermissions(this)
@@ -63,7 +60,6 @@ class DescrizioneContinuaActivity : AppCompatActivity() {
             setupSpeechRecognition()
         }
     }
-
     //Funzione per avviare la fotocamera
     private fun startCamera() {
         cameraManager = CameraManager(this)
@@ -78,14 +74,8 @@ class DescrizioneContinuaActivity : AppCompatActivity() {
         speechManager.setCallbacks(
             onCommand = { command ->
                 when (command) {
-                    "analizza" -> captureAndAnalyze()
-                    "stop" -> viewModel.stopTTS()
-                }
-            },
-            onErr = { error ->
-                if (Constants.DEBUG_MODE) {
-                    Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
-                    //Log.d("SpeechRecognizer", "Errore: $error")
+                    "leggi" -> viewModel.readAllText()
+                    "stop" -> viewModel.stopReading()
                 }
             }
         )
@@ -95,35 +85,27 @@ class DescrizioneContinuaActivity : AppCompatActivity() {
 
     //Funzione per catturare l'immagine e analizzarla
     private fun captureAndAnalyze() {
+        if (isAnalyzing) return
+
+        isAnalyzing = true
         cameraManager.captureFrame { bitmap ->
             bitmap?.let {
                 viewModel.analyzeFrame(it)
-            } ?: run {
-                Toast.makeText(this, "Errore cattura immagine", Toast.LENGTH_SHORT).show()
             }
+            isAnalyzing = false
         }
     }
 
     //Funzione per aggiornare lo stato della UI in base al viewModel
     private fun observeViewModel() {
-        viewModel.uiState.observe(this) { state ->
-            when (state) {
-                is DescrizioneContinuaViewModel.UiState.Idle -> {
-                    loadingIndicator.visibility = View.GONE
-                }
-                is DescrizioneContinuaViewModel.UiState.Loading -> {
-                    loadingIndicator.visibility = View.VISIBLE
-                    descriptionText.text = "Analisi in corso..."
-                }
-                is DescrizioneContinuaViewModel.UiState.Success -> {
-                    loadingIndicator.visibility = View.GONE
-                    descriptionText.text = state.text
-                }
-                is DescrizioneContinuaViewModel.UiState.Error -> {
-                    loadingIndicator.visibility = View.GONE
-                    descriptionText.text = "Errore: ${state.message}"
-                }
+        viewModel.textBlocks.observe(this) { blocks ->
+            textBlocksRecycler.adapter = TextBlockAdapter(blocks) { block ->
+                viewModel.readBlock(block.index)
             }
+        }
+
+        viewModel.isProcessing.observe(this) { processing ->
+            loadingIndicator.visibility = if (processing) View.VISIBLE else View.GONE
         }
     }
 
@@ -143,13 +125,12 @@ class DescrizioneContinuaActivity : AppCompatActivity() {
                 startCamera()
                 setupSpeechRecognition()
             },
-            onDenied = { denied ->
+            onDenied = {
                 Toast.makeText(this, "Permessi necessari negati", Toast.LENGTH_LONG).show()
                 finish()
             }
         )
     }
-
 
     //Serie di funzioni per pausa/riprendere la fotocamera e la rilevazione vocale
     override fun onResume() {
@@ -177,3 +158,4 @@ class DescrizioneContinuaActivity : AppCompatActivity() {
         }
     }
 }
+

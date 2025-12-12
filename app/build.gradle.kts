@@ -95,8 +95,12 @@ dependencies {
     // Gemini
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
-    // Text Recognition v2 (Latin script)
+    // Text Recognition v2
     implementation("com.google.mlkit:text-recognition:16.0.1")
+    //Recycler view usata nella modalità 2:
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+
+
 
     // --- TensorFlow Lite per MiDaS (depth) ---
     implementation("org.tensorflow:tensorflow-lite:2.14.0")
