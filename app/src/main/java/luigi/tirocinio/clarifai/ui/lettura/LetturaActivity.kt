@@ -1,6 +1,7 @@
 package luigi.tirocinio.clarifai.ui.lettura
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import luigi.tirocinio.clarifai.R
 import luigi.tirocinio.clarifai.ml.manager.CameraManager
 import luigi.tirocinio.clarifai.ml.manager.SpeechRecognizerManager
+import luigi.tirocinio.clarifai.utils.Constants
 import luigi.tirocinio.clarifai.utils.PermissionHelper
 
 class LetturaActivity : AppCompatActivity() {
@@ -60,6 +62,7 @@ class LetturaActivity : AppCompatActivity() {
             setupSpeechRecognition()
         }
     }
+
     //Funzione per avviare la fotocamera
     private fun startCamera() {
         cameraManager = CameraManager(this)
@@ -68,29 +71,69 @@ class LetturaActivity : AppCompatActivity() {
 
     //Funzione per avviare la rilevazione vocale
     private fun setupSpeechRecognition() {
-        if (!PermissionHelper.hasVoicePermissions(this)) return
+        if (!PermissionHelper.hasVoicePermissions(this)) {
+            //Log.e("LetturaActivity", "Permesso RECORD_AUDIO non concesso")
+            return
+        }
 
         speechManager = SpeechRecognizerManager(this)
         speechManager.setCallbacks(
             onCommand = { command ->
-                when (command) {
-                    "leggi" -> viewModel.readAllText()
-                    "stop" -> viewModel.stopReading()
+                //Log.d("LetturaActivity", "COMANDO RICEVUTO: $command")
+
+                //Usa processVoiceCommand del ViewModel
+                val normalizedCommand = command.lowercase().trim()
+
+                when {
+                    normalizedCommand.contains("analizza") -> {
+                        //Log.d("LetturaActivity", "Eseguo captureAndAnalyze")
+                        captureAndAnalyze()
+                    }
+                    normalizedCommand.contains("leggi") -> {
+                        //Log.d("LetturaActivity", "Eseguo readAllText")
+                        viewModel.readAllText()
+                    }
+                    //Delega tutti gli altri comandi al ViewModel
+                    normalizedCommand.contains("stop") ||
+                            normalizedCommand.contains("ferma") ||
+                            normalizedCommand.contains("prossimo") ||
+                            normalizedCommand.contains("successivo") ||
+                            normalizedCommand.contains("precedente") ||
+                            normalizedCommand.contains("indietro") ||
+                            normalizedCommand.contains("riprendi") ||
+                            normalizedCommand.contains("continua") -> {
+                        viewModel.processVoiceCommand(command)
+                    }
+                    else -> {
+                        //Log.d("LetturaActivity", "Comando non riconosciuto: $command")
+                    }
+                }
+            },
+            onErr = { error ->
+                //Log.e("LetturaActivity", "Errore speech: $error")
+                if (Constants.DEBUG_MODE) {
+                    Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
                 }
             }
         )
 
         speechManager.startListening()
+        //Log.d("LetturaActivity", "Speech recognition configurato e avviato")
     }
+
 
     //Funzione per catturare l'immagine e analizzarla
     private fun captureAndAnalyze() {
         if (isAnalyzing) return
 
         isAnalyzing = true
-        cameraManager.captureFrame { bitmap ->
-            bitmap?.let {
-                viewModel.analyzeFrame(it)
+
+        //callback ora riceve anche rotationDegrees
+        cameraManager.captureFrame { bitmap, rotationDegrees ->
+            if (bitmap != null) {
+                viewModel.analyzeFrame(bitmap, rotationDegrees)
+            } else {
+                Toast.makeText(this, "Errore cattura immagine", Toast.LENGTH_SHORT).show()
             }
             isAnalyzing = false
         }
@@ -106,6 +149,13 @@ class LetturaActivity : AppCompatActivity() {
 
         viewModel.isProcessing.observe(this) { processing ->
             loadingIndicator.visibility = if (processing) View.VISIBLE else View.GONE
+        }
+
+        //Osserva indice blocco corrente)
+        viewModel.currentReadingIndex.observe(this) { index ->
+            if (index >= 0) {
+                //Log.d("LetturaActivity", "Lettura blocco: $index")
+            }
         }
     }
 
@@ -151,6 +201,7 @@ class LetturaActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (::cameraManager.isInitialized) {
+            cameraManager.stopCamera()
             cameraManager.shutdown()
         }
         if (::speechManager.isInitialized) {
@@ -158,4 +209,3 @@ class LetturaActivity : AppCompatActivity() {
         }
     }
 }
-

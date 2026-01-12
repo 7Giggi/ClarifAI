@@ -95,10 +95,10 @@ class DescrizioneContinuaActivity : AppCompatActivity() {
 
     //Funzione per catturare l'immagine e analizzarla
     private fun captureAndAnalyze() {
-        cameraManager.captureFrame { bitmap ->
-            bitmap?.let {
-                viewModel.analyzeFrame(it)
-            } ?: run {
+        cameraManager.captureFrame { bitmap, rotationDegrees ->
+            if (bitmap != null) {
+                viewModel.analyzeFrame(bitmap)
+            } else {
                 Toast.makeText(this, "Errore cattura immagine", Toast.LENGTH_SHORT).show()
             }
         }

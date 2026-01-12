@@ -13,10 +13,6 @@ object Constants {
     }    const val GEMINI_MODEL = "gemini-2.0-flash" // Modello di gemini usato
     const val GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/"
 
-    // costanti per la telecamera
-    const val CAMERA_PREVIEW_WIDTH = 1280
-    const val CAMERA_PREVIEW_HEIGHT = 720
-    const val TARGET_FPS = 30
 
     // costanti per mod 1
     const val DESCRIPTION_DEBOUNCE_MS = 3000L // 3 secondi tra descrizioni automatiche (non ancora implementate)
@@ -36,11 +32,8 @@ object Constants {
     """.trimIndent()
 
     // costanti mod2 (non ancora implementate)
-    const val TEXT_MIN_CONFIDENCE = 0.7f // Confidence minima per considerare testo valido
-    const val TEXT_VERTICAL_GROUPING_PX = 50   // Aumenta per raggruppare righe più distanti
-    const val TEXT_HORIZONTAL_GAP_PX = 100     // Aumenta per unire parole più distanti
-    const val TEXT_MIN_HEIGHT_PX = 20 // Altezza minima blocco testo in pixel
-    const val TRANSLATION_CACHE_SIZE = 50 // Numero traduzioni da mantenere in cache
+    const val TEXT_MIN_CONFIDENCE = 0.9f // Confidence minima per considerare testo valido
+
 
     // costanti per comandi vocali (non funzionano)
     val VOICE_COMMANDS_READ = listOf(
