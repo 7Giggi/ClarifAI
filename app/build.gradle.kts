@@ -76,14 +76,14 @@ android {
 }
 
 dependencies {
-    // --- Base Android ---
+    // Base Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-    // --- CameraX (preview + image analysis) ---
+    //CameraX
     val cameraXVersion = "1.3.1"
     implementation("androidx.camera:camera-core:$cameraXVersion")
     implementation("androidx.camera:camera-camera2:$cameraXVersion")
@@ -97,25 +97,25 @@ dependencies {
 
     // Text Recognition v2
     implementation("com.google.mlkit:text-recognition:16.0.1")
+    implementation(libs.mlkit.translate)
+    implementation(libs.mlkit.language.id)
+
+
     //Recycler view usata nella modalità 2:
     implementation("androidx.recyclerview:recyclerview:1.4.0")
 
 
 
-    // --- TensorFlow Lite per MiDaS (depth) ---
+    //TensorFlow Lite per MiDaS (depth)
     implementation("org.tensorflow:tensorflow-lite:2.14.0")
     implementation("org.tensorflow:tensorflow-lite-gpu:2.14.0")
     implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
 
-    // --- Coroutines ---
+    //Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
-    // --- Network (per traduzione cloud opzionale) ---
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    // --- Test ---
+    //Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
