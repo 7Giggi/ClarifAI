@@ -9,18 +9,7 @@ import androidx.core.content.ContextCompat
 
 // Helper per i permessi richiesti dall'app
 object PermissionHelper {
-
-    // Verifica se tutti i permessi sono stati concessi
-    fun hasAllPermissions(context: Context): Boolean {
-        return Constants.REQUIRED_PERMISSIONS.all { permission ->
-            ContextCompat.checkSelfPermission(
-                context,
-                permission
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
-    // Verifica se un singolo permesso è stato concesso
+    // Funzione per verificare se un singolo permesso è stato concesso
     fun hasPermission(context: Context, permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
@@ -28,7 +17,7 @@ object PermissionHelper {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    // Richiede i permessi mancanti
+    // Funzione per richiedere i permessi mancanti
     fun requestPermissions(activity: Activity) {
         ActivityCompat.requestPermissions(
             activity,
@@ -37,19 +26,7 @@ object PermissionHelper {
         )
     }
 
-    // Ottiene i permessi mancanti
-    fun getMissingPermissions(context: Context): Array<String> {
-        return Constants.REQUIRED_PERMISSIONS.filter { permission ->
-            ContextCompat.checkSelfPermission(
-                context,
-                permission
-            ) != PackageManager.PERMISSION_GRANTED
-        }.toTypedArray()
-    }
-
-
-
-    //Gestisce il risultato della richiesta permessi
+    // Funzione per gestire il risultato della richiesta permessi
     fun handlePermissionResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -70,13 +47,13 @@ object PermissionHelper {
         }
     }
 
-    // Verifica i permessi sulla fotocamera
+    // Funzione per verificare i permessi sulla fotocamera
     fun hasCameraPermissions(context: Context): Boolean {
         return hasPermission(context, Manifest.permission.CAMERA) &&
                 hasPermission(context, Manifest.permission.INTERNET)
     }
 
-    // Verifica i permessi sul microfono
+    // Funzione per verificare i permessi sul microfono
     fun hasVoicePermissions(context: Context): Boolean {
         return hasPermission(context, Manifest.permission.RECORD_AUDIO)
     }

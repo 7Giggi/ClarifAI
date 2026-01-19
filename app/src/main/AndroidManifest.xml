@@ -18,14 +18,14 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClarifAI"
         tools:targetApi="31">
 
-        <!-- META-DATA CRITICO: Download automatico modelli ML Kit -->
+        <!--Download automatico modelli ML Kit -->
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="ocr,image_labeling,object_detection" />
@@ -42,7 +42,7 @@
 
         <!-- Modalità 1: Descrizione Continua -->
         <activity
-            android:name=".ui.descContinua.DescrizioneContinuaActivity"
+            android:name=".ui.descrizione.DescrizioneActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
@@ -54,7 +54,7 @@
 
         <!-- Modalità 3: Rilevamento Ostacoli -->
         <activity
-            android:name=".ui.ostacoli.ostacoliActivity"
+            android:name=".ui.ostacoli.OstacoliActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 

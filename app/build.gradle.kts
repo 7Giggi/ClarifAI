@@ -47,17 +47,13 @@ android {
             )
         }
     }
-
-    // Per TensorFlow Lite: non comprimere i modelli .tflite
+    
     packaging {
         resources {
             excludes += "META-INF/**"
         }
     }
 
-    aaptOptions {
-        noCompress("tflite")
-    }
 
     // Java/Kotlin
     compileOptions {
@@ -84,7 +80,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     //CameraX
-    val cameraXVersion = "1.3.1"
+    val cameraXVersion = "1.5.2"
     implementation("androidx.camera:camera-core:$cameraXVersion")
     implementation("androidx.camera:camera-camera2:$cameraXVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraXVersion")
@@ -106,13 +102,15 @@ dependencies {
 
 
 
-    //TensorFlow Lite per MiDaS (depth)
-    implementation("org.tensorflow:tensorflow-lite:2.14.0")
-    implementation("org.tensorflow:tensorflow-lite-gpu:2.14.0")
-    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
+    //Onxxruntime utilizzato per depthAnything v2
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.23.2")
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.10.0")
 
     //Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
 
     //Test
