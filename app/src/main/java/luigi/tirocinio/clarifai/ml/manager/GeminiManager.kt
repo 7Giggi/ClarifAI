@@ -1,6 +1,7 @@
 package luigi.tirocinio.clarifai.ml.manager
 
 import android.graphics.Bitmap
+import android.util.Log
 import luigi.tirocinio.clarifai.utils.Constants
 import luigi.tirocinio.clarifai.utils.resize
 import luigi.tirocinio.clarifai.utils.toBase64
@@ -35,7 +36,7 @@ class GeminiManager {
     ): String? = withContext(Dispatchers.IO) {
         var connection: HttpURLConnection? = null
         try {
-            val apiUrl = "\${Constants.GEMINI_API_URL}\${Constants.GEMINI_MODEL}:generateContent?key=\${Constants.GEMINI_API_KEY}"
+            val apiUrl = "${Constants.GEMINI_API_URL}${Constants.GEMINI_MODEL}:generateContent?key=${Constants.GEMINI_API_KEY}"
             val url = URL(apiUrl)
             connection = url.openConnection() as HttpURLConnection
             connection.apply {
@@ -48,9 +49,9 @@ class GeminiManager {
             }
 
             val requestBody = buildGeminiRequest(base64Image, prompt)
-            // if (Constants.DEBUG_MODE) {
-            //     Log.d(Constants.LOG_TAG, "Gemini API Request: \${requestBody.toString(2)}")
-            // }
+            if (Constants.DEBUG_MODE) {
+                Log.d(Constants.LOG_TAG, "Gemini API Request: \${requestBody.toString(2)}")
+            }
 
             val writer = OutputStreamWriter(connection.outputStream)
             writer.write(requestBody.toString())
@@ -68,9 +69,9 @@ class GeminiManager {
                 reader.close()
 
                 val responseJson = JSONObject(response.toString())
-                // if (Constants.DEBUG_MODE) {
-                //     Log.d(Constants.LOG_TAG, "Gemini API Response: \${responseJson.toString(2)}")
-                // }
+                if (Constants.DEBUG_MODE) {
+                     Log.d(Constants.LOG_TAG, "Gemini API Response: \${responseJson.toString(2)}")
+                }
                 return@withContext parseGeminiResponse(responseJson)
             } else {
                 val errorReader = BufferedReader(InputStreamReader(connection.errorStream))
@@ -80,11 +81,11 @@ class GeminiManager {
                     errorResponse.append(line)
                 }
                 errorReader.close()
-                // Log.e(Constants.LOG_TAG, "Gemini API Error (\$responseCode): \$errorResponse")
+                Log.e(Constants.LOG_TAG, "Gemini API Error (\$responseCode): \$errorResponse")
                 return@withContext null
             }
         } catch (e: Exception) {
-            // Log.e(Constants.LOG_TAG, "Errore connessione Gemini: \${e.message}", e)
+            Log.e(Constants.LOG_TAG, "Errore connessione Gemini: \${e.message}", e)
             return@withContext null
         } finally {
             connection?.disconnect()
@@ -181,7 +182,7 @@ class GeminiManager {
                         success = true
                     } else {
                         lastError = "Nessuna risposta da Gemini (tentativo \$attemptCount/\$maxRetries)"
-                        // Log.w(Constants.LOG_TAG, lastError)
+                        Log.w(Constants.LOG_TAG, lastError)
                         if (attemptCount < maxRetries) {
                             delay(1000L * attemptCount)
                         }
